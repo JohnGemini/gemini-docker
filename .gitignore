@@ -1,0 +1,7 @@
+*.pyc
+*user*.rptdesign
+*.pem
+*.pickle
+*.swp
+*.djcache
+*.pid
