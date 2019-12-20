@@ -1,0 +1,82 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    expose:
+    - "3306"
+    networks:
+    - gocloud
+    volumes:
+    - ./mysql:/var/lib/mysql
+  phpmyadmin:
+    depends_on:
+    - mysql
+    image: phpmyadmin/phpmyadmin:4.8
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      PMA_HOST: mysql
+    ports:
+    - "8443:80"
+    networks:
+    - gocloud
+  rabbitmq:
+    image: rabbitmq:3.7
+    expose:
+    - "5672"
+    ports:
+    - "15672:15672"
+    networks:
+    - gocloud
+  api:
+    depends_on:
+    - mysql
+    image: gemini/gocloud
+    environment:
+      SERVICE: apache2
+    env_file:
+    - env
+    ports:
+    - "443:443"
+    - "9117:9117"
+    networks:
+    - gocloud
+    command:
+    - touch /var/log/gemini/gocloud.log && tail -f /var/log/gemini/gocloud.log
+    tmpfs:
+    - /usr/share/gocloud/gocloud/django_cache:size=50m,mode=1777
+  celery_worker:
+    depends_on:
+    - api
+    - rabbitmq
+    image: gemini/gocloud
+    environment:
+      SERVICE: worker
+    env_file:
+    - env
+    ports:
+    - '8888:8888'
+    networks:
+    - gocloud
+    command:
+    - touch /var/log/gemini/celery-worker.log && tail -f /var/log/gemini/celery-worker.log
+    tmpfs:
+    - /usr/share/gocloud/gocloud/django_cache:size=50m,mode=1777
+  celery_beat:
+    depends_on:
+    - celery_worker
+    image: gemini/gocloud
+    environment:
+      SERVICE: beat
+    env_file:
+    - env
+    networks:
+    - gocloud
+    command:
+    - touch /var/log/gemini/celery-beat.log && tail -f /var/log/gemini/celery-beat.log
+    tmpfs:
+    - /usr/share/gocloud/gocloud/django_cache:size=50m,mode=1777
+networks:
+  gocloud:
+    driver: bridge
