@@ -40,7 +40,7 @@ python-jenkins
 six==1.10.0
 
 # tls/ssl
-pyopenssl==0.12
+pyopenssl==17.5.0
 cryptography==2.1.4
 ndg-httpsclient
 pyasn1
