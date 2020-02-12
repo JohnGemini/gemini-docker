@@ -1,4 +1,4 @@
-django==1.8.4
+django==1.11.28
 requests[security]==2.14.2
 django-registration==1.0
 suds
