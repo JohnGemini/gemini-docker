@@ -41,7 +41,7 @@ six==1.10.0
 
 # tls/ssl
 pyopenssl==0.12
-cryptography==2.1.4
+cryptography==3.2
 ndg-httpsclient
 pyasn1
 
