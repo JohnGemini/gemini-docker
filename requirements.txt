@@ -60,7 +60,7 @@ Markdown==2.0.1
 jsonpatch==1.16
 boto==2.49.0
 
-numpy==1.15.4
+numpy==1.22.0
 
 # pa client
 pandevice==0.12.0
